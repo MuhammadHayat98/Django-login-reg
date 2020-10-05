@@ -1,0 +1,50 @@
+body{
+	background-color: #618685;
+}
+h1 {
+	text-align: center;
+	font-family: 'Times New Roman';
+}
+
+h2{	
+	text-align: center;
+	font-family: 'Times New Roman';
+}
+
+label {
+	font-family: 'Times New Roman';
+}
+
+div p{
+	text-align:center;
+	font-family: 'Times New Roman';
+}
+
+input{
+	font-family: 'Times New Roman';
+}
+
+button{
+	font-family: 'Times New Roman';
+}
+.navbar-brand{
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+	font-size: 20px;
+}
+.navbar{
+	padding-bottom: 10px;
+}
+.card {
+	margin: 0 auto; /* Added */
+	float: none; /* Added */
+	margin-bottom: 10px; /* Added */
+}
+.container{
+	padding: 20px;
+}
+.card{
+	width: 26rem;
+	height: 40rem;
+
+}
