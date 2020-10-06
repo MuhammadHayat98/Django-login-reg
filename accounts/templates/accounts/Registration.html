@@ -69,16 +69,29 @@
                                     <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                                 </div>
                                 <!-- replace 60 and add form.password -->
-                                {{form.password}}
+                                {{form.password1}}
                                 <!-- <input name = "password" class="form-control" placeholder="******" type="password"> -->
                             </div> <!-- input-group.// -->
                         </div> <!-- form-group// -->
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-block"> Register </button>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                </div>
+                                <!-- replace 60 and add form.password -->
+                                {{form.password2}}
+                                <!-- <input name = "password" class="form-control" placeholder="******" type="password"> -->
+                            </div> <!-- input-group.// -->
+                        </div> <!-- form-group// -->
+                        <div class="form-group">
+                            <input class="btn btn-primary btn-block" type="submit" value="Register Account">
                         </div> <!-- form-group// -->
                         <p class="text-center"><a href= "{% url 'login' %}" class="btn">Already have an account? Login</a></p>
+                        
                     </form>
+                    
                 </article>
+                {{form.errors}}
             </div> <!-- card.// -->
             
                 </aside> <!-- col.// -->
@@ -89,6 +102,20 @@
         
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>
+        var form_fields = document.getElementsByTagName('input')
+		form_fields[1].placeholder='Username';
+		form_fields[2].placeholder='First Name';
+        form_fields[3].placeholder='Last Name';
+        form_fields[4].placeholder='Email';
+		form_fields[5].placeholder='Enter password';
+		form_fields[6].placeholder='Re-enter Password';
+
+
+		for (var field in form_fields){	
+			form_fields[field].className += ' form-control'
+		}
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>

@@ -30,7 +30,7 @@
                                     <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                                 </div>
 
-                                <input name="Username" class="form-control" placeholder="Username" type="text">
+                                <input name="username" class="form-control" placeholder="Username" type="text">
                             </div> <!-- input-group.// -->
                         </div> <!-- form-group// -->
                         <div class="form-group">
@@ -42,9 +42,12 @@
                             </div> <!-- input-group.// -->
                         </div> <!-- form-group// -->
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-block"> Login </button>
+                            <input class="btn btn-primary btn-block" type="submit" value="Login">
                         </div> <!-- form-group// -->
                     </form>
+                    {% for message in messages %}
+					    <p id="messages">{{message}}</p>
+				    {% endfor %}		
                     <a href="{% url 'register' %}" class="btn btn-primary btn-block" role="button" aria-pressed="true">Register</a>
                     <p class="text-center"><a href="Reset" class="btn">Forgot your account? reset</a></p>
                 </article>

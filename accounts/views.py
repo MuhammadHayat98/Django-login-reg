@@ -13,17 +13,44 @@ from .models import *
 from .forms import CreateUserForm
 
 def registerPage(request):
-    form = CreateUserForm()
-
-    return render(request, 'accounts/Registration.html')
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+        form = CreateUserForm()
+        if request.method == 'POST':
+            form = CreateUserForm(request.POST)
+            if form.is_valid():
+                form.save()
+                user = form.cleaned_data.get('username')
+                messages.success(request, 'Account was created for '  + user)
+                
+                return redirect('login')
+        context = {'form':form}
+        return render(request, 'accounts/Registration.html', context)
 
 def loginPage(request):
-    return render(request, 'accounts/Login.html')
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+	    if request.method == 'POST':
+		    username = request.POST.get('username')
+		    password =request.POST.get('password')
+
+		    user = authenticate(request, username=username, password=password)
+
+		    if user is not None:
+			    login(request, user)
+			    return redirect('home')
+		    else:
+			    messages.info(request, 'Username OR password is incorrect')
+
+	    context = {}
+	    return render(request, 'accounts/login.html', context)
 
 def logoutUser(request):
     logout(request)
     return redirect('login')
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def home(request):
     return HttpResponse('home')
