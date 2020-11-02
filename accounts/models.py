@@ -10,3 +10,12 @@ class UserInfo(models.Model):
 
     def __str__(self):
         return self.fName
+
+class MockUser(models.Model):
+    firstName = models.CharField(max_length=200, null=True)
+    passWord = models.CharField(max_length=200, null=True)
+
+    def __str__(self):
+        return self.firstName
+    
+    
