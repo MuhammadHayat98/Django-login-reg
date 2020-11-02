@@ -6,7 +6,6 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
 from django.contrib import messages
-from rest_framework.renderers import JSONRenderer
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 from .models import *
