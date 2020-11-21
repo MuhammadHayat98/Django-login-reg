@@ -11,6 +11,9 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import CreateUserForm
 
+def blogPage(request):
+    return render(request,'accounts/blog.html')
+
 def registerPage(request):
     if request.user.is_authenticated:
         return redirect('home')
