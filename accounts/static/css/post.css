@@ -6,7 +6,7 @@ body{
     margin-left: 10rem;
     margin-right: 10rem;
     display: table-caption;
-    align-items: center;
+
 }
 
 div p{
@@ -25,7 +25,8 @@ button{
 .navbar{
     padding: 5px;
     padding-left: 10rem;
-    border-bottom: 1px solid #333333
+    border-bottom: 1px solid #333333;
+
 }
 .nav-link{
     font-size: large;
@@ -34,9 +35,10 @@ button{
     text-decoration: underline;
 }
 .card {
-	margin: 0 auto; /* Added */
-	float: center; /* Added */
-    margin-bottom: 10px; /* Added */
+    margin: 0 auto; /* Added */
+    padding: 1rem;
+	float: left; /* Added */
+    margin-top: 40px;
     width: 40rem;
     height: auto;
     margin-bottom: 40px;;
@@ -62,11 +64,3 @@ button{
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1.1rem;
 }
-.table{
-    background-color: white;
-}
-table, th, td {
-    border: 1px solid black;
-  }
-  .form-control{
-  }

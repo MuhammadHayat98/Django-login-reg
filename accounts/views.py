@@ -11,6 +11,9 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import CreateUserForm
 
+def postNewBlog(request):
+    return render(request,'accounts/post.html')
+    
 def blogPage(request):
     return render(request,'accounts/blog.html')
 
