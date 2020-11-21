@@ -1,0 +1,68 @@
+body{
+    background-color: white;
+    margin: 2px;
+}
+.container{
+    margin-left: 10rem;
+    margin-right: 10rem;
+}
+
+div p{
+	text-align:center;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+button{
+	font-family: 'Times New Roman';
+}
+.navbar-brand{
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+	font-size: 25px;
+}
+.navbar{
+    padding: 5px;
+    padding-left: 10rem;
+    border-bottom: 1px solid #333333
+}
+.nav-link{
+    font-size: large;
+    color: black;
+    padding: 30px;
+    text-decoration: underline;
+}
+.card {
+	margin: 0 auto; /* Added */
+	float: left; /* Added */
+    margin-bottom: 10px; /* Added */
+    width: 60rem;
+    height: auto;
+    margin-bottom: 40px;;
+}
+
+.card-text.description{
+    text-align: left;
+}
+.card-text.hashTags{
+    font: blue;
+    font-size: 40px;
+}
+.card-text.postBy{
+    font-size: small;
+    text-align: left;
+}
+.items{
+    padding-top: 100px;
+}
+.btn{
+    margin-top:20px;
+    margin-bottom:20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.1rem;
+}
+.table{
+    background-color: white;
+}
+table, th, td {
+    border: 1px solid black;
+  }
