@@ -27,6 +27,9 @@
                     <th scope="col">Username</th>
                     <th scope="col">Password</th>
                   </tr>
+                  {% for blog in blogs %}
+                    <tr><td>{{blog.subject}}</td><td>{{blog.description}}</td></tr>
+                  {%endfor%}
                 </thead>
               </table>
             <!-- <table id="users">

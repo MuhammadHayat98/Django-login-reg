@@ -39,7 +39,7 @@ def loginPage(request):
     else:
 	    if request.method == 'POST':
 		    username = request.POST.get('username')
-		    password =request.POST.get('password')
+		    password = request.POST.get('password')
 
 		    user = authenticate(request, username=username, password=password)
 
@@ -58,7 +58,11 @@ def logoutUser(request):
 
 @login_required(login_url='login')
 def home(request):
-    return render(request, 'accounts/home.html')
+    context = {
+        'blogs' : Blog.objects.all()
+    }
+    return render(request, 'accounts/home.html', context)
+
 
 def userReturn(request):
     MockUser.objects.all().delete()
