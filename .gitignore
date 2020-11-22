@@ -114,3 +114,7 @@ media/
 # **/migrations/**
 # !**/migrations
 # !**/migrations/__init__.py
+accounts/__pycache__/models.cpython-38.pyc
+accounts/__pycache__/models.cpython-38.pyc
+accounts/__pycache__/urls.cpython-38.pyc
+accounts/__pycache__/models.cpython-38.pyc
