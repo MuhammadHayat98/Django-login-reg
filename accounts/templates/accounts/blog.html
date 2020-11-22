@@ -24,47 +24,61 @@
 
         <body>
           <div class = "container">
-            <a href="/post" class="btn btn-primary btn-lg active" id="post" name="post" role="button" aria-pressed="true">Post something new!</a>
+            <a href="{% url 'postBlog' %}"  class="btn btn-primary btn-lg active" id="post" name="post" role="button" aria-pressed="true">Post something new!</a>
            
             <!-- for loop should go here to populate the cards with sql -->
+            {% for blog in blogs %}
             <div class="card" id = "card">
               <div class="card-body">
-                <h5 class="card-title subject" id="subject" name="subject">Card subject</h5>
-                <p class="card-text description" id="description" name="description"> content is yqerf i qeruyhfb qerfbvuqeh rfqn er8uqer uqervib efvhucbedufruhvb adshvb queyhrb vqe ery qeruyfhbqerqe rferb qerbvuy qebrfv qerv qervuybqeruvy qerv erbv ervoqerb verbnv qevbqerv ohbeqvuh efve vqerv eyhrfvb ehrfbvue euqvbiuqerbv qervqer v  .</p>
-                <p class="card-text hasTags" id="hash" name="hash" style="color: blue;">#card's #hash</p>
-                <p class="card-text postBy" id="postBy" name="postBy">Posted by @comp440</p>
+                <h5 class="card-title subject" id="subject" name="subject">{{blog.subject}}</h5>
+                <p class="card-text description" id="description" name="description">{{blog.description}}</p>
+                <p class="card-text hashTags" id="hash" name="hash" style="color: blue;">#blockchain #python #django</p>
+                <p class="card-text postBy" id="postBy" name="postBy">posted by {{blog.author}}</p>
                 <!-- used to comment something on one of the posts -->
-                <form action="/comment.py" method="POST">
+                <form action="" method="POST">
+                  {% csrf_token %}
                   <div class="form-group">
                     <label for="comments">reply to post!</label>
+                    <select name="pos_neg" id="pos_neg">
+                      <option value="positive">positive</option>
+                      <option value="negative">negative</option>
+                    
+                    </select>
                     <textarea class="form-control" id="comment" rows="1"></textarea>
                   </div>
-                  <button type="submit" class="btn btn-primary">reply</button>
+                  <input type="submit" class="btn btn-primary" value="reply">
                 </form>
                 <!--      -->
               </div>
             </div>
+            {%for comment in comment%}
+            {%if comment.blogID_id == blog.id %}
+            <p>{{comment.description}}</p>
+            {%endif%}
+            {%endfor%}
+            {%endfor%}
+
             <!-- end of for loop -->
 
 
 
 
 
-            <div class="card" id = "card">
+            <!-- <div class="card" id = "card">
               <div class="card-body">
                 <h5 class="card-title subject" id="subject" name="subject">Card subject</h5>
                 <p class="card-text description" id="description" name="description"> content is yqerf i qeruyhfb qerfbvuqeh rfqn er8uqer uqervib efvhucbedufruhvb adshvb queyhrb vqe ery qeruyfhbqerqe rferb qerbvuy qebrfv qerv qervuybqeruvy qerv erbv ervoqerb verbnv qevbqerv ohbeqvuh efve vqerv eyhrfvb ehrfbvue euqvbiuqerbv qervqer v  .</p>
-                <p class="card-text hasTags" id="hash" name="hash" style="color: blue;">#card's #hash</p>                
+                <p class="card-text hasTags" id="hash" name="hash" style="color: blue;">#card's #hash</p>                 -->
                 <!-- used to comment something on one of the posts -->
-                <form action="/comment.py" method="POST">
+                <!-- <form action="/comment.py" method="POST">
                   <div class="form-group">
                     <label for="comments">reply to post!</label>
                     <textarea class="form-control" id="comment" rows="1"></textarea>
                   </div>
                   <button type="submit" class="btn btn-primary">reply</button>
                 </form>
-                <!--      -->
-              </div>
+                  -->
+              <!-- </div>
             </div>
             <div class="card" >
               <div class="card-body">
@@ -72,7 +86,7 @@
                 <p class="card-text description"> content.</p>
                 <p class="card-text hastags">#card's hash</p>
               </div>
-            </div>
+            </div> --> 
             <!-- <button type="button" class="btn btn-secondary btn-sm" id="initDB">Intialize DB</button>
             <table class="table" id="users">
                 <thead>

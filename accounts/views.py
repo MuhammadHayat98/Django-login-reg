@@ -7,15 +7,34 @@ from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django import forms
 # Create your views here.
 from .models import *
-from .forms import CreateUserForm
+from .forms import CreateUserForm, newPostForm
 
+@login_required(login_url='login')
 def postNewBlog(request):
-    return render(request,'accounts/post.html')
+    # if not request.user.is_authenticated:
+    #     return redirect('login')
+    # else:
+    # user = User.objects.get(id=1)
+    form = newPostForm()
+    form.fields['author'].widget = forms.HiddenInput()
+    if request.method == 'POST':
+        form = newPostForm(request.POST)
+        if form.is_valid():
+            blog = form.save()
+            user = User.objects.get(id=1)
+            blog.author = user
+            blog.save()
+            return redirect('home')
+        print("we in IF")
+    print("we out IF")
+    context = {'form':form}
+    return render(request,'accounts/post.html', context=context)
     
-def blogPage(request):
-    return render(request,'accounts/blog.html')
+# def blogPage(request):
+#     return render(request,'accounts/blog.html')
 
 def registerPage(request):
     if request.user.is_authenticated:
@@ -31,6 +50,7 @@ def registerPage(request):
                 
                 return redirect('login')
         context = {'form':form}
+        print(request.method)
         return render(request, 'accounts/Registration.html', context)
 
 def loginPage(request):
@@ -59,9 +79,11 @@ def logoutUser(request):
 @login_required(login_url='login')
 def home(request):
     context = {
-        'blogs' : Blog.objects.all()
+        'blogs' : Blog.objects.all().order_by('-date_posted'),
+        'comments' : Comment.objects.all()
     }
-    return render(request, 'accounts/home.html', context)
+    return render(request, 'accounts/blog.html', context)
+
 
 
 def userReturn(request):

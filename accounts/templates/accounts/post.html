@@ -26,21 +26,30 @@
           <div class = "container">
             <div class="card" id = "card">
                 <div class="card-body">
-                    <form action="/createPost.py" method="POST">
+                    <form action="#" method="POST">
+                      {% csrf_token %}
                     <div class="form-group">
                         <label for="subject">Subject</label>
-                        <input type="text" class="form-control" id="subject" name="subject" value="" required>
+                        {{form.subject}}
+                        <!-- <input type="text" class="form-control" id="subject" name="subject" value="" required> -->
                     </div>
                     <div class="form-group">
                         <label for="description">description</label>
-                        <textarea class="form-control" id="description" name="description" value="" required rows="1"></textarea>
+                        {{form.description}}
+                        <!-- <textarea class="form-control" id="description" name="description" value="" required rows="1"></textarea> -->
                         </div>
                         <div class="form-group">
                         <label for="hash">Hastags</label>
+                        {{form.author}}
                         <input type="text" class="form-control" id="hash" name="hash" value="" >
                         </div>
-                    <button type="submit" class="btn btn-primary" id="createPost" name="createPost">Create Post</button>
+                        <div class="form-group">
+                          <input class="btn btn-primary btn-block" type="submit" value="Create Post">
+                      </div>
                     </form>
+                    {% for message in form.errors %}
+					            <p id="messages">{{message}}</p>
+				            {% endfor %}	
                 </div>
             </div>
           </div>

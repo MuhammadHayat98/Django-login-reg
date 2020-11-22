@@ -47,7 +47,8 @@ button{
 }
 .card-text.hashTags{
     font: blue;
-    font-size: 40px;
+    font-size: 20px;
+    text-align: left;
 }
 .card-text.postBy{
     font-size: small;
@@ -68,5 +69,4 @@ button{
 table, th, td {
     border: 1px solid black;
   }
-  .form-control{
-  }
+ 
