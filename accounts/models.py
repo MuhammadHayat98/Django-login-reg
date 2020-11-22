@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.utils import timezone
+from django.contrib.auth.models import User
 # Create your models here.
 
 class UserInfo(models.Model):
@@ -18,4 +19,19 @@ class MockUser(models.Model):
     def __str__(self):
         return self.firstName
     
-    
+class Blog(models.Model):
+    subject = models.CharField(max_length=200)
+    description = models.TextField()
+    date_posted = models.DateTimeField(default=timezone.now)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.subject
+
+class Comment(models.Model):
+    pos_neg = models.CharField(max_length=100)
+    desc = models.TextField(null=True)
+    blogID = models.ForeignKey(Blog, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.desc
