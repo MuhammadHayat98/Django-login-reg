@@ -8,33 +8,19 @@ from django.core import serializers
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django import forms
+from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from taggit.models import Tag
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Field
+from django.template.defaultfilters import slugify
 # Create your views here.
 from .models import *
 from .forms import CreateUserForm, newPostForm
 
 @login_required(login_url='login')
 def postNewBlog(request):
-    # if not request.user.is_authenticated:
-    #     return redirect('login')
-    # else:
-    # user = User.objects.get(id=1)
-    form = newPostForm()
-    form.fields['author'].widget = forms.HiddenInput()
-    if request.method == 'POST':
-        form = newPostForm(request.POST)
-        if form.is_valid():
-            blog = form.save()
-            user = User.objects.get(id=1)
-            blog.author = user
-            blog.save()
-            return redirect('home')
-        print("we in IF")
-    print("we out IF")
-    context = {'form':form}
-    return render(request,'accounts/post.html', context=context)
-    
-# def blogPage(request):
-#     return render(request,'accounts/blog.html')
+    return redirect('home')
 
 def registerPage(request):
     if request.user.is_authenticated:
@@ -76,24 +62,37 @@ def logoutUser(request):
     logout(request)
     return redirect('login')
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def home(request):
     context = {
-        'blogs' : Blog.objects.all().order_by('-date_posted'),
-        'comments' : Comment.objects.all()
+        'blogs' : Blog.objects.all().order_by('-date_posted')
     }
     return render(request, 'accounts/blog.html', context)
 
+class BlogListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+    model = Blog
+    template_name = 'accounts/blog.html'
+    context_object_name = 'blogs'
+    ordering = ['-date_posted']
 
+class BlogDetailView(LoginRequiredMixin, DetailView):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+    model = Blog
 
-def userReturn(request):
-    MockUser.objects.all().delete()
-    MockUser.objects.bulk_create([
-        MockUser(firstName="john", passWord="pass1234"),
-        MockUser(firstName="john", passWord="pass1234"),
-        MockUser(firstName="john", passWord="pass1234"),
-        MockUser(firstName="john", passWord="pass1234"),
-        MockUser(firstName="john", passWord="pass1234")
-    ])
-    users = serializers.serialize("json", MockUser.objects.all())
-    return JsonResponse(users, safe=False)
+class BlogCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+    model = Blog
+    fields = ['subject', 'description', 'tags']
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        newpost = form.save(commit=False)
+        newpost.slug = slugify(newpost.subject)
+        newpost.save()
+        form.save_m2m()
+        return super().form_valid(form)
+    
