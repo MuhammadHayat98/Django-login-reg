@@ -36,3 +36,8 @@ class newPostForm(ModelForm):
         if numPosts > 2:
             raise forms.ValidationError("Your user plan does not support more than {} posts".format(numPosts))
         return self.cleaned_data
+
+class commentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('pos_neg', 'desc')

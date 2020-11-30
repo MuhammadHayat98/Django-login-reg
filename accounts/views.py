@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from taggit.models import Tag
 from crispy_forms.helper import FormHelper
@@ -18,7 +19,7 @@ from django.template.defaultfilters import slugify
 from django.core.exceptions import ValidationError
 # Create your views here.
 from .models import *
-from .forms import CreateUserForm, newPostForm
+from .forms import CreateUserForm, newPostForm, commentForm
 
 @login_required(login_url='login')
 def postNewBlog(request):
@@ -81,10 +82,41 @@ class BlogListView(LoginRequiredMixin, ListView):
     context_object_name = 'blogs'
     ordering = ['-date_posted']
 
-class BlogDetailView(LoginRequiredMixin, DetailView):
+class BlogDetailView(LoginRequiredMixin, FormMixin, DetailView):
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
     model = Blog
+    form_class = commentForm
+
+    def get_success_url(self):
+        return reverse('home')
+
+    def get_context_data(self, **kwargs):
+        context = super(BlogDetailView, self).get_context_data(**kwargs)
+        context['form'] = commentForm(initial={'blog': self.object})
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.blog = self.object
+        print(self.object.subject)
+        form.save()
+        return super(BlogDetailView, self).form_valid(form)
+
+    
+    def get_context_data(self, **kwargs):
+        context = super(BlogDetailView, self).get_context_data(**kwargs)
+        context_related = Comment.objects.filter(blog=self.object)[:20]
+        context['related'] = context_related
+        return context
 
 class BlogCreateView(LoginRequiredMixin, CreateView):
     login_url = '/login/'
