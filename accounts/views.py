@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect 
 from django.http import HttpResponse
+from datetime import date
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
@@ -14,6 +15,7 @@ from taggit.models import Tag
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Field
 from django.template.defaultfilters import slugify
+from django.core.exceptions import ValidationError
 # Create your views here.
 from .models import *
 from .forms import CreateUserForm, newPostForm
@@ -21,6 +23,8 @@ from .forms import CreateUserForm, newPostForm
 @login_required(login_url='login')
 def postNewBlog(request):
     return redirect('home')
+
+# def check_user(request):
 
 def registerPage(request):
     if request.user.is_authenticated:
@@ -86,13 +90,35 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
     model = Blog
+    # form_class = newPostForm
     fields = ['subject', 'description', 'tags']
     
+    def clean(self):
+        super().clean()
+        if Blog.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count() > 2:
+            raise forms.ValidationError("exceed")
+
+    # def clean(self, form):
+    #     numPosts = Blog.objects.filter(author=self.request.user).count()
+    #     print(numPosts)
+    #     if numPosts > 2:
+    #         raise forms.ValidationError("Your user plan does not support more than {} posts".format(numPosts))
+    #     # return super().clean(form)
+    #     return self.cleaned_data
+    # def get_form_kwargs(self):
+    #     kwargs = {'user' : self.request.user, }
+    #     return kwargs
+
     def form_valid(self, form):
+        numPosts = Blog.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count()
+        print(numPosts)
+        if numPosts > 2:
+            raise forms.ValidationError("Exceeded max posts for day")
         form.instance.author = self.request.user
         newpost = form.save(commit=False)
         newpost.slug = slugify(newpost.subject)
         newpost.save()
         form.save_m2m()
         return super().form_valid(form)
+    
     
