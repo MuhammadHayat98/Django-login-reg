@@ -1,21 +1,25 @@
 body{
     background-color: white;
     margin: 2px;
+    
 }
 .container{
-    margin-left: 10rem;
-    margin-right: 10rem;
-    display: table-caption;
-    align-items: center;
+    padding: 20px;
+    
 }
-
+.row{
+    display: block;
+    align-items: center;
+    justify-content: center;
+}
 div p{
 	text-align:center;
 	font-family: Arial, Helvetica, sans-serif;
 }
 
 button{
-	font-family: 'Times New Roman';
+    font-family: 'Times New Roman';
+    display: inline-block;
 }
 .navbar-brand{
 	font-family: Arial, Helvetica, sans-serif;
@@ -26,7 +30,7 @@ button{
     padding: 5px;
     padding-left: 10rem;
     border-bottom: 1px solid #333333
-}
+}   
 .nav-link{
     font-size: large;
     color: black;
@@ -34,12 +38,18 @@ button{
     text-decoration: underline;
 }
 .card {
-	margin: 0 auto; /* Added */
-	float: center; /* Added */
-    margin-bottom: 10px; /* Added */
-    width: 40rem;
+	margin: 0 auto; 
+	float: center; 
+    margin-bottom: 10px; 
+    width: 65rem;
     height: auto;
-    margin-bottom: 40px;;
+    margin-bottom: 40px;
+}
+.card-body{
+    display: block;
+    width: 70rem;
+    height: auto;
+    margin-bottom: 40px;
 }
 
 .card-text.description{
@@ -53,9 +63,6 @@ button{
 .card-text.postBy{
     font-size: small;
     text-align: left;
-}
-.items{
-    padding-top: 100px;
 }
 .btn{
     margin-top:20px;
