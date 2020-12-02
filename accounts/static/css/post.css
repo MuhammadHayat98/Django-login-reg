@@ -1,21 +1,25 @@
+
 body{
     background-color: white;
     margin: 2px;
+    
 }
 .container{
-    margin-left: 10rem;
-    margin-right: 10rem;
-    display: table-caption;
-
+    padding: 20px;
 }
-
+.row{
+    display: block;
+    align-items: center;
+    justify-content: center;
+}
 div p{
 	text-align:center;
 	font-family: Arial, Helvetica, sans-serif;
 }
 
 button{
-	font-family: 'Times New Roman';
+    font-family: 'Times New Roman';
+    display: inline-block;
 }
 .navbar-brand{
 	font-family: Arial, Helvetica, sans-serif;
@@ -25,9 +29,8 @@ button{
 .navbar{
     padding: 5px;
     padding-left: 10rem;
-    border-bottom: 1px solid #333333;
-
-}
+    border-bottom: 1px solid #333333
+}   
 .nav-link{
     font-size: large;
     color: black;
@@ -35,13 +38,15 @@ button{
     text-decoration: underline;
 }
 .card {
-    margin: 0 auto; /* Added */
-    padding: 1rem;
-	float: left; /* Added */
-    margin-top: 40px;
+	margin: 0 auto; 
+	float: center; 
+    margin-bottom: 10px; 
     width: 40rem;
     height: auto;
-    margin-bottom: 40px;;
+    margin-bottom: 40px;
+}
+.card-body{
+    display: block;
 }
 
 .card-text.description{
@@ -49,14 +54,12 @@ button{
 }
 .card-text.hashTags{
     font: blue;
-    font-size: 40px;
+    font-size: 20px;
+    text-align: left;
 }
 .card-text.postBy{
     font-size: small;
     text-align: left;
-}
-.items{
-    padding-top: 100px;
 }
 .btn{
     margin-top:20px;
@@ -64,3 +67,10 @@ button{
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1.1rem;
 }
+.table{
+    background-color: white;
+}
+table, th, td {
+    border: 1px solid black;
+  }
+ 

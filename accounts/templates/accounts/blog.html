@@ -13,7 +13,7 @@
         <a class="navbar-brand">Blogging Home</a>
         <ul class="nav justify-content-center">
             <li class="nav-item">
-              <a class="nav-link" href="/blog">Blog</a>
+              <a class="nav-link" href="/">Blog</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/account">account</a>
@@ -24,33 +24,38 @@
 
         <body>
           <div class = "container">
-            <a href="{% url 'postBlog' %}"  class="btn btn-primary btn-lg active" id="post" name="post" role="button" aria-pressed="true">Post something new!</a>
-           
-            <!-- for loop should go here to populate the cards with sql -->
-            {% for blog in blogs %}
-            <div class="card" id = "card">
-              <div class="card-body">
-                <h5 class="card-title subject" id="subject" name="subject">{{blog.subject}}</h5>
-                <p class="card-text description" id="description" name="description">{{blog.description}}</p>
-                <p class="card-text hashTags" id="hash" name="hash" style="color: blue;">#blockchain #python #django</p>
-                <p class="card-text postBy" id="postBy" name="postBy">posted by {{blog.author}}</p>
-                <!-- used to comment something on one of the posts -->
-                <form action="" method="POST">
-                  {% csrf_token %}
-                  <div class="form-group">
-                    <label for="comments">reply to post!</label>
-                    <select name="pos_neg" id="pos_neg">
-                      <option value="positive">positive</option>
-                      <option value="negative">negative</option>
-                    
-                    </select>
-                    <textarea class="form-control" id="comment" rows="1"></textarea>
-                  </div>
-                  <input type="submit" class="btn btn-primary" value="reply">
-                </form>
-                <!--      -->
-              </div>
+            <div class="row">
+                <a href="{% url 'postBlog' %}"  class="btn btn-primary btn-lg active" id="post" name="post" role="button" aria-pressed="true">Post something new!</a>
             </div>
+            <!-- for loop should go here to populate the cards with sql -->
+            <div class="row">
+              
+            {% for blog in blogs %}
+              <div class="card " id = "card">
+                <div class="card-body">
+                  <h5 class="card-title subject" id="subject" name="subject">{{blog.subject}}</h5>
+                  <p class="card-text description" id="description" name="description">{{blog.description}}</p>
+                  <p class="card-text hashTags" id="hash" name="hash" style="color: blue;">#blockchain #python #django</p>
+                  <p class="card-text postBy" id="postBy" name="postBy">posted by {{blog.author}}</p>
+                  <!-- used to comment something on one of the posts -->
+                  <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label for="comments">reply to post!</label>
+                      <select name="pos_neg" id="pos_neg">
+                        <option value="positive">positive</option>
+                        <option value="negative">negative</option>
+                      
+                      </select>
+                      <textarea class="form-control" id="comment" rows="1"></textarea>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="reply">
+                  </form>
+                  <!--      -->
+                </div>
+                </div>
+              </div>
+              
             {%for comment in comment%}
             {%if comment.blogID_id == blog.id %}
             <p>{{comment.description}}</p>
