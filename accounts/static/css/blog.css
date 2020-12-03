@@ -47,7 +47,7 @@ button{
 }
 .card-body{
     display: block;
-    width: 70rem;
+    /* width: 70rem; */
     height: auto;
     margin-bottom: 40px;
 }
@@ -63,6 +63,14 @@ button{
 .card-text.postBy{
     font-size: small;
     text-align: left;
+    display: inline-block;
+    float:right
+    
+}
+.card-text.datePosted{
+    font-size:small;
+    display: inline-block;
+    float: right;
 }
 .btn{
     margin-top:20px;
