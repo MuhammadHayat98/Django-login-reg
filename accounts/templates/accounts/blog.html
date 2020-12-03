@@ -27,6 +27,8 @@
             <a href="{% url 'blog-create' %}"  class="btn btn-primary btn-lg active" id="post" name="post" role="button" aria-pressed="true">Post something new!</a>
            
             <!-- for loop should go here to populate the cards with sql -->
+            <div class="row">
+              
             {% for blog in blogs %}
             <div class="card" id = "card">
               <div class="card-body">
