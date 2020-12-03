@@ -13,7 +13,7 @@
         <a class="navbar-brand">Blogging Home</a>
         <ul class="nav justify-content-center">
             <li class="nav-item">
-              <a class="nav-link" href="/">Blog</a>
+              <a class="nav-link" href="{% url 'home' %}">Blog</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/account">account</a>
@@ -35,8 +35,10 @@
                 <div class="card-body">
                   <h5 class="card-title subject" id="subject" name="subject">{{blog.subject}}</h5>
                   <p class="card-text description" id="description" name="description">{{blog.description}}</p>
-                  <p class="card-text hashTags" id="hash" name="hash" style="color: blue;">#blockchain #python #django</p>
-                  <p class="card-text postBy" id="postBy" name="postBy">posted by {{blog.author}}</p>
+                  <p class="card-text hashTags" id="hash" name="hash" style="color: blue;">#blog #hastags #here</p>
+                  <p class="card-text datePosted" id="datePosted" name="datePosted"> {{blog.date_posted}}</p>
+                  <p class="card-text postBy" id="postBy" name="postBy">posted by {{blog.author}}: </p>
+
                   <!-- used to comment something on one of the posts -->
                   <form action="" method="POST">
                     {% csrf_token %}
@@ -49,19 +51,19 @@
                       </select>
                       <textarea class="form-control" id="comment" rows="1"></textarea>
                     </div>
-                    <input type="submit" class="btn btn-primary" value="reply">
+                    <input type="submit" class="btn btn-primary" id="reply" value="reply">
                   </form>
                   <!--      -->
                 </div>
                 </div>
               </div>
               
-            {%for comment in comment%}
+            <!-- {%for comment in comment%}
             {%if comment.blogID_id == blog.id %}
             <p>{{comment.description}}</p>
             {%endif%}
             {%endfor%}
-            {%endfor%}
+            {%endfor%} -->
 
             <!-- end of for loop -->
 

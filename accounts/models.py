@@ -25,7 +25,7 @@ class Blog(models.Model):
     description = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    # hashtags = models._____  should have hastags data connected
     def __str__(self):
         return self.subject
 
