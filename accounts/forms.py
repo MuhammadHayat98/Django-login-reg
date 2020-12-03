@@ -21,6 +21,23 @@ class newPostForm(ModelForm):
             'placeholder': "Optional text"}),
         max_length=5000,
         required=False)
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        self.author = user
+        super(newPostForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = Blog
-        fields = ('subject', 'description', 'author')
+        fields = ('subject', 'description', 'tags')
+
+    def clean(self):
+        numPosts = Blog.objects.filter(author=self.author).count()
+        print(numPosts)
+        if numPosts > 2:
+            raise forms.ValidationError("Your user plan does not support more than {} posts".format(numPosts))
+        return self.cleaned_data
+
+class commentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('pos_neg', 'desc')

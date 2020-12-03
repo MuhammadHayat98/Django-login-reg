@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect 
 from django.http import HttpResponse
+from datetime import date
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
@@ -8,33 +9,23 @@ from django.core import serializers
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django import forms
+from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic.edit import FormMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from taggit.models import Tag
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Field
+from django.template.defaultfilters import slugify
+from django.core.exceptions import ValidationError
 # Create your views here.
 from .models import *
-from .forms import CreateUserForm, newPostForm
+from .forms import CreateUserForm, newPostForm, commentForm
 
 @login_required(login_url='login')
 def postNewBlog(request):
-    # if not request.user.is_authenticated:
-    #     return redirect('login')
-    # else:
-    # user = User.objects.get(id=1)
-    form = newPostForm()
-    form.fields['author'].widget = forms.HiddenInput()
-    if request.method == 'POST':
-        form = newPostForm(request.POST)
-        if form.is_valid():
-            blog = form.save()
-            user = User.objects.get(id=1)
-            blog.author = user
-            blog.save()
-            return redirect('home')
-        print("we in IF")
-    print("we out IF")
-    context = {'form':form}
-    return render(request,'accounts/post.html', context=context)
-    
-# def blogPage(request):
-#     return render(request,'accounts/blog.html')
+    return redirect('home')
+
+# def check_user(request):
 
 def registerPage(request):
     if request.user.is_authenticated:
@@ -76,24 +67,90 @@ def logoutUser(request):
     logout(request)
     return redirect('login')
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def home(request):
     context = {
-        'blogs' : Blog.objects.all().order_by('-date_posted'),
-        'comments' : Comment.objects.all()
+        'blogs' : Blog.objects.all().order_by('-date_posted')
     }
     return render(request, 'accounts/blog.html', context)
 
+class BlogListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+    model = Blog
+    template_name = 'accounts/blog.html'
+    context_object_name = 'blogs'
+    ordering = ['-date_posted']
 
+class BlogDetailView(LoginRequiredMixin, FormMixin, DetailView):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+    model = Blog
+    form_class = commentForm
 
-def userReturn(request):
-    MockUser.objects.all().delete()
-    MockUser.objects.bulk_create([
-        MockUser(firstName="john", passWord="pass1234"),
-        MockUser(firstName="john", passWord="pass1234"),
-        MockUser(firstName="john", passWord="pass1234"),
-        MockUser(firstName="john", passWord="pass1234"),
-        MockUser(firstName="john", passWord="pass1234")
-    ])
-    users = serializers.serialize("json", MockUser.objects.all())
-    return JsonResponse(users, safe=False)
+    def get_success_url(self):
+        return reverse('home')
+
+    def get_context_data(self, **kwargs):
+        context = super(BlogDetailView, self).get_context_data(**kwargs)
+        context['form'] = commentForm(initial={'blog': self.object})
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.blog = self.object
+        print(self.object.subject)
+        form.save()
+        return super(BlogDetailView, self).form_valid(form)
+
+    
+    def get_context_data(self, **kwargs):
+        context = super(BlogDetailView, self).get_context_data(**kwargs)
+        context_related = Comment.objects.filter(blog=self.object)[:20]
+        context['related'] = context_related
+        return context
+
+class BlogCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+    model = Blog
+    # form_class = newPostForm
+    fields = ['subject', 'description', 'tags']
+    
+    def clean(self):
+        super().clean()
+        if Blog.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count() > 2:
+            raise forms.ValidationError("exceed")
+
+    # def clean(self, form):
+    #     numPosts = Blog.objects.filter(author=self.request.user).count()
+    #     print(numPosts)
+    #     if numPosts > 2:
+    #         raise forms.ValidationError("Your user plan does not support more than {} posts".format(numPosts))
+    #     # return super().clean(form)
+    #     return self.cleaned_data
+    # def get_form_kwargs(self):
+    #     kwargs = {'user' : self.request.user, }
+    #     return kwargs
+
+    def form_valid(self, form):
+        numPosts = Blog.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count()
+        print(numPosts)
+        if numPosts > 2:
+            raise forms.ValidationError("Exceeded max posts for day")
+        form.instance.author = self.request.user
+        newpost = form.save(commit=False)
+        newpost.slug = slugify(newpost.subject)
+        newpost.save()
+        form.save_m2m()
+        return super().form_valid(form)
+    
+    
