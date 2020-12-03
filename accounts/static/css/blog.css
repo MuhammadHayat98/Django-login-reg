@@ -13,7 +13,7 @@ body{
     justify-content: center;
 }
 div p{
-	text-align:center;
+	text-align:left;
 	font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -50,6 +50,7 @@ button{
     /* width: 70rem; */
     height: auto;
     margin-bottom: 40px;
+    padding-bottom: 20px;
 }
 
 .card-text.description{
@@ -84,4 +85,24 @@ button{
 table, th, td {
     border: 1px solid black;
   }
- 
+.comment{
+    border-bottom: 1px solid black;
+    width: max-content;
+    text-align: left;
+  }
+.date{
+      text-align: left;
+  }
+.card-text.comDescription{
+    text-align: left;
+}
+.card-text.posNeg{
+    text-align: left;
+    float:left;
+}
+.card-text.author{
+    font-size: smaller;
+   text-align: right;
+   border-bottom: .5px solid black;
+   padding-bottom: 20px;
+}
