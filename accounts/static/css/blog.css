@@ -117,3 +117,6 @@ table, th, td {
 .dropdown{
     display: inline;
 }
+.follows{
+    width: 300px;
+}

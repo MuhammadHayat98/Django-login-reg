@@ -82,7 +82,11 @@ def positive(request):
     return render(request, 'accounts/positive.html', context)
 
 def followsWho(request):
+     
+    # two = (User.objects.filter(user=request.Y)).get()
+    # one = (User.objects.filter(user=request.X)).get()
     context = {
+        # 'blogs' : (Profile.objects.filter(user=one).get().following.all() | Profile.objects.filter(user=two).get().following.all()).distinct()
         'blogs' : Blog.objects.all().order_by('-date_posted')
     }
     return render(request, 'accounts/followsWho.html', context)
@@ -184,7 +188,7 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         numPosts = Blog.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count()
         print(numPosts)
-        if numPosts > 2:
+        if numPosts > 1:
             return redirect('home')
         else:
             form.instance.author = self.request.user
