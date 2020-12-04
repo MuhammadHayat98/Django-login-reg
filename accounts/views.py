@@ -99,10 +99,15 @@ class BlogDetailView(LoginRequiredMixin, FormMixin, DetailView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+        numComPerDay = Comment.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count()
+        numComPerPost = Comment.objects.filter(blog=self.object).count()
+        if numComPerDay < 3 and numComPerPost <= 1:
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+        return redirect('home')
+
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -147,7 +152,7 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         numPosts = Blog.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count()
         print(numPosts)
-        if numPosts > 2:
+        if numPosts > 1:
             return redirect('home')
         else:
             form.instance.author = self.request.user
