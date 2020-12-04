@@ -74,6 +74,43 @@ def home(request):
     }
     return render(request, 'accounts/blog.html', context)
 
+def positive(request):
+    user = request.user
+    context = {
+        'blogs' : Blog.objects.filter(author=user).filter(comment__pos_neg='Positive').exclude(comment__pos_neg="Negative")
+    }
+    return render(request, 'accounts/positive.html', context)
+
+def followsWho(request):
+    context = {
+        'blogs' : Blog.objects.all().order_by('-date_posted')
+    }
+    return render(request, 'accounts/followsWho.html', context)
+
+def onDate(request):
+    context = {
+        'blogs' : Blog.objects.all().order_by('-date_posted')
+    }
+    return render(request, 'accounts/onDate.html', context)
+
+def neverPosted(request):
+    context = {
+        'blogs' : Blog.objects.all().order_by('-date_posted')
+    }
+    return render(request, 'accounts/neverPosted.html', context)
+
+def someNegative(request):
+    context = {
+        'blogs' : Blog.objects.all().order_by('-date_posted')
+    }
+    return render(request, 'accounts/someNegative.html', context)
+
+def noNegativeComments(request):
+    context = {
+        'blogs' : Blog.objects.all().order_by('-date_posted')
+    }
+    return render(request, 'accounts/noNegativeComments.html', context)
+
 class BlogListView(LoginRequiredMixin, ListView):
     login_url = '/login/'
     redirect_field_name = 'redirect_to'
