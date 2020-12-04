@@ -106,3 +106,14 @@ table, th, td {
    border-bottom: .5px solid black;
    padding-bottom: 20px;
 }
+.btn.btn-secondary.dropdown-toggle{
+    float: right;
+    margin-top:20px;
+    margin-bottom:20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.1rem;
+    
+}
+.dropdown{
+    display: inline;
+}

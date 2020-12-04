@@ -11,5 +11,10 @@ urlpatterns = [
     path('logout/', views.logoutUser, name="logout"),
     # path('initdb/', views.userReturn, name="initdb"),
     # path('blog/', views.blogPage, name="blog"),
-    path('post/',views.postNewBlog, name="postBlog")
+    path('followsWho/',views.followsWho, name="followsWho"),
+    path('neverPosted/',views.neverPosted, name="neverPosted"),
+    path('noNegativeComments/',views.noNegativeComments, name="noNegativeComments"),
+    path('onDate/',views.onDate, name="onDate"),
+    path('positive/',views.positive, name="positive"),
+    path('someNegative/',views.someNegative, name="someNegative")
 ]
