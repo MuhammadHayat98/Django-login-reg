@@ -163,9 +163,12 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
     fields = ['subject', 'description', 'tags']
     
     def clean(self):
-        super().clean()
-        if Blog.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count() > 2:
-            raise forms.ValidationError("exceed")
+        cleaned_data = super().clean()
+        user = self.request.user
+        numPosts = Blog.objects.filter(author=user, date_posted__date=timezone.now().date()).count()
+        if numPosts > 2:
+            # raise forms.ValidationError("test")
+            self.add_error('tags', "err")
 
     # def clean(self, form):
     #     numPosts = Blog.objects.filter(author=self.request.user).count()
@@ -182,12 +185,13 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
         numPosts = Blog.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count()
         print(numPosts)
         if numPosts > 2:
-            raise forms.ValidationError("Exceeded max posts for day")
-        form.instance.author = self.request.user
-        newpost = form.save(commit=False)
-        newpost.slug = slugify(newpost.subject)
-        newpost.save()
-        form.save_m2m()
-        return super().form_valid(form)
+            return redirect('home')
+        else:
+            form.instance.author = self.request.user
+            newpost = form.save(commit=False)
+            newpost.slug = slugify(newpost.subject)
+            newpost.save()
+            form.save_m2m()
+            return super().form_valid(form)
     
     

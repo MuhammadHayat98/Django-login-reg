@@ -59,7 +59,11 @@
                   <div class="card-body">
                     {% for comment in related %}
                     <p class="card-text comDescription" id="comDescription" name="comDescription">{{comment.desc|linebreaks}}</p>
-                    <p class="card-text posNeg" id="posNeg" name="posNeg">{{comment.pos_neg }}</p>
+                    {% if comment.pos_neg == "Positive" %}
+                    <p class="card-text posNeg" id="posNeg" name="posNeg">👍</p>
+                    {% elif comment.pos_neg == "Negative"%}
+                    <p class="card-text posNeg" id="posNeg" name="posNeg">👎</p>
+                    {% endif %}
                     <p class="card-text author" id="author" name="author">{{comment.author}}</p>
                   {% empty %}
                       <p>No comments here yet :(</p>
