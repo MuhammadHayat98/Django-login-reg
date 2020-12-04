@@ -68,8 +68,8 @@ button{
     float:right
     
 }
-.card-text.datePosted{
-    font-size:small;
+.card-text.postDate{
+    font-size:x-small   ;
     display: inline-block;
     float: right;
 }

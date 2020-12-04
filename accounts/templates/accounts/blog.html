@@ -52,6 +52,7 @@
                 <a href="" class="mr-1 badge badge-info">#{{ tag }}</a>
                 {% endfor %}
                 <p class="card-text postBy" id="postBy" name="postBy">posted by {{blog.author}}</p>
+                <p class="card-text postDate" id="postDate" name="postDate">{{blog.date_posted}}</p>
                 <!-- used to comment something on one of the posts -->
                 {% comment %} <form action="" method="POST">
                   {% csrf_token %}
