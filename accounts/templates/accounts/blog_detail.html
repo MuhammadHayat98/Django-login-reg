@@ -38,14 +38,16 @@
                 {% endfor %}
                 <p class="card-text postBy" id="postBy" name="postBy">posted by {{object.author}}</p>
                 <!-- used to comment something on one of the posts -->
-               <form action="" method="POST">
-                  {% csrf_token %}
-                  <div class="form-group">
-                    <label for="comments">reply to post!</label>
-                    {{ form|crispy }}
-                  </div>
-                  <input type="submit" class="btn btn-primary" value="reply">
-                </form> 
+               {% if user != object.author %}
+                  <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label for="comments">reply to post!</label>
+                      {{ form|crispy }}
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="reply">
+                  </form> 
+                {% endif %}
                 <!--      -->
               </div>
             </div>
