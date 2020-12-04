@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect 
 from django.http import HttpResponse
-from datetime import date
+from datetime import date,datetime
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
@@ -17,6 +17,8 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Field
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ValidationError
+from django.db.models import Count
+from django.db.models.aggregates import Max
 # Create your views here.
 from .models import *
 from .forms import CreateUserForm, newPostForm, commentForm
@@ -82,28 +84,40 @@ def positive(request):
     return render(request, 'accounts/positive.html', context)
 
 def followsWho(request):
-     
-    # two = (User.objects.filter(user=request.Y)).get()
-    # one = (User.objects.filter(user=request.X)).get()
+    # uX = User.objects.filter(username=request.GET.get('X')).get()
+    # uY = User.objects.filter(username=request.GET.get('Y')).get()
+    # if request.method == "GET":
+    #     t = (Profile.objects.filter(user=uX).get().following.all() | Profile.objects.filter(user=uY).get().following.all()).distinct()
+    #     print(t)
+    if 'X' and 'Y' in request.GET:
+        uX = User.objects.filter(username=request.GET.get('X')).get()
+        uY = User.objects.filter(username=request.GET.get('Y')).get()
+        t = (Profile.objects.filter(user=uX).get().following.all() & Profile.objects.filter(user=uY).get().following.all()).distinct()
+        print(t)
+    else:
+        t = []
     context = {
         # 'blogs' : (Profile.objects.filter(user=one).get().following.all() | Profile.objects.filter(user=two).get().following.all()).distinct()
-        'blogs' : Blog.objects.all().order_by('-date_posted')
+        'users' : t
     }
     return render(request, 'accounts/followsWho.html', context)
 
 def onDate(request):
+    # val = Blog.objects.filter(date_posted__date__year = '2020',date_posted__date__month = '12',date_posted__date__day = '04').count("author")
     context = {
-        'blogs' : Blog.objects.all().order_by('-date_posted')
+        'blogs' : Blog.objects.filter(date_posted__date__year = '2020',date_posted__date__month = '12',date_posted__date__day = '04')
     }
+    print(context)
     return render(request, 'accounts/onDate.html', context)
 
 def neverPosted(request):
     context = {
-        'blogs' : Blog.objects.all().order_by('-date_posted')
+        'users' : User.objects.filter(blog=None)
     }
     return render(request, 'accounts/neverPosted.html', context)
 
 def someNegative(request):
+    
     context = {
         'blogs' : Blog.objects.all().order_by('-date_posted')
     }
@@ -111,7 +125,7 @@ def someNegative(request):
 
 def noNegativeComments(request):
     context = {
-        'blogs' : Blog.objects.all().order_by('-date_posted')
+        'blogs' : Blog.objects.exclude(comment__pos_neg="Negative")
     }
     return render(request, 'accounts/noNegativeComments.html', context)
 
@@ -140,10 +154,14 @@ class BlogDetailView(LoginRequiredMixin, FormMixin, DetailView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+        numComPerDay = Comment.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count()
+        numComPerPost = Comment.objects.filter(blog=self.object).count()
+        if numComPerDay < 3 and numComPerPost <= 1:
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+        return redirect('home')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -166,29 +184,11 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
     # form_class = newPostForm
     fields = ['subject', 'description', 'tags']
     
-    def clean(self):
-        cleaned_data = super().clean()
-        user = self.request.user
-        numPosts = Blog.objects.filter(author=user, date_posted__date=timezone.now().date()).count()
-        if numPosts > 2:
-            # raise forms.ValidationError("test")
-            self.add_error('tags', "err")
-
-    # def clean(self, form):
-    #     numPosts = Blog.objects.filter(author=self.request.user).count()
-    #     print(numPosts)
-    #     if numPosts > 2:
-    #         raise forms.ValidationError("Your user plan does not support more than {} posts".format(numPosts))
-    #     # return super().clean(form)
-    #     return self.cleaned_data
-    # def get_form_kwargs(self):
-    #     kwargs = {'user' : self.request.user, }
-    #     return kwargs
 
     def form_valid(self, form):
         numPosts = Blog.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count()
         print(numPosts)
-        if numPosts > 1:
+        if numPosts > 2:
             return redirect('home')
         else:
             form.instance.author = self.request.user

@@ -42,6 +42,7 @@ class Comment(models.Model):
     CHOICES = [(POS, '👍'), (NEG, '👎')]
     pos_neg = models.CharField(max_length=100, choices=CHOICES, default=POS)
     desc = models.TextField(null=True)
+    date_posted = models.DateTimeField(default=timezone.now)
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     

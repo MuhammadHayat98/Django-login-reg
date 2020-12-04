@@ -42,8 +42,7 @@
             <div class="card" id = "card">
                 <div class="card-body">
                     <p class="card-text description" id="description" name="description">Fill in the form to see which users are followed by the two user.</p>
-                    <form action = "" method = "POST"> 
-                        {% csrf_token %}  
+                    <form action = "" method = "GET"> 
                         <div class="form-group follows">
                             <label for="userX"></label>
                             <input type="text" class="form-control" id="X" name="X" placeholder="Username one">
@@ -62,13 +61,13 @@
             <div class="row">
                 <div class="card" id = "card">
                   <div class="card-body">
-                    <!-- {% for blog in blogs %}
-                    <p class="card-text author" id="author" name="author">{{blog.user}}</p>
+                    {% for user in users %}
+                    <p class="card-text author" id="author" name="author">{{user.username}}</p>
                   {% empty %}
-                      <p>No comments here yet :(</p>
+                      <p>No shared followers</p>
                       {% endfor %}
                   </div>
-                </div> -->
+                </div> 
 
             </div>
              <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
