@@ -119,13 +119,13 @@ def neverPosted(request):
 def someNegative(request):
     
     context = {
-        'blogs' : Blog.objects.all().order_by('-date_posted')
+        'users' : User.objects.filter(comment__pos_neg="Negative").exclude(comment__pos_neg="Positive")
     }
     return render(request, 'accounts/someNegative.html', context)
 
 def noNegativeComments(request):
     context = {
-        'blogs' : Blog.objects.exclude(comment__pos_neg="Negative")
+        'users' : User.objects.exclude(blog__comment__pos_neg="Negative").exclude(blog__author__isnull=True)
     }
     return render(request, 'accounts/noNegativeComments.html', context)
 
@@ -156,7 +156,7 @@ class BlogDetailView(LoginRequiredMixin, FormMixin, DetailView):
         form = self.get_form()
         numComPerDay = Comment.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count()
         numComPerPost = Comment.objects.filter(blog=self.object).count()
-        if numComPerDay < 3 and numComPerPost <= 1:
+        if numComPerDay < 3 and numComPerPost < 1:
             if form.is_valid():
                 return self.form_valid(form)
             else:
