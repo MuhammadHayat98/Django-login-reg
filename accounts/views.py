@@ -82,12 +82,21 @@ def positive(request):
     return render(request, 'accounts/positive.html', context)
 
 def followsWho(request):
-     
-    # two = (User.objects.filter(user=request.Y)).get()
-    # one = (User.objects.filter(user=request.X)).get()
+    # uX = User.objects.filter(username=request.GET.get('X')).get()
+    # uY = User.objects.filter(username=request.GET.get('Y')).get()
+    # if request.method == "GET":
+    #     t = (Profile.objects.filter(user=uX).get().following.all() | Profile.objects.filter(user=uY).get().following.all()).distinct()
+    #     print(t)
+    if 'X' and 'Y' in request.GET:
+        uX = User.objects.filter(username=request.GET.get('X')).get()
+        uY = User.objects.filter(username=request.GET.get('Y')).get()
+        t = (Profile.objects.filter(user=uX).get().following.all() & Profile.objects.filter(user=uY).get().following.all()).distinct()
+        print(t)
+    else:
+        t = []
     context = {
         # 'blogs' : (Profile.objects.filter(user=one).get().following.all() | Profile.objects.filter(user=two).get().following.all()).distinct()
-        'blogs' : Blog.objects.all().order_by('-date_posted')
+        'users' : t
     }
     return render(request, 'accounts/followsWho.html', context)
 
@@ -99,11 +108,12 @@ def onDate(request):
 
 def neverPosted(request):
     context = {
-        'blogs' : Blog.objects.all().order_by('-date_posted')
+        'users' : User.objects.filter(blog=None)
     }
     return render(request, 'accounts/neverPosted.html', context)
 
 def someNegative(request):
+    
     context = {
         'blogs' : Blog.objects.all().order_by('-date_posted')
     }
@@ -140,10 +150,14 @@ class BlogDetailView(LoginRequiredMixin, FormMixin, DetailView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+        numComPerDay = Comment.objects.filter(author=self.request.user, date_posted__date=timezone.now().date()).count()
+        numComPerPost = Comment.objects.filter(blog=self.object).count()
+        if numComPerDay < 3 and numComPerPost <= 1:
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+        return redirect('home')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
