@@ -42,16 +42,11 @@
             <!-- for loop should go here to populate the cards with sql -->
             <div class="row">
               
-            {% for blog in blogs %}
+            {% for user in users %}
             <div class="card" id = "card">
               <div class="card-body">
-                <h5 class="card-title subject" id="subject" name="subject"><a href="{% url 'blog-detail' blog.id %}">{{blog.subject}}</a></h5>
-                <p class="card-text description" id="description" name="description">{{blog.description}}</p>
-                {% for tag in blog.tags.all %}
-                {% comment %} <p class="card-text hashTags" id="hash" name="hash" style="color: blue;">{{tags}}</p> {% endcomment %}
-                <a href="" class="mr-1 badge badge-info">#{{ tag }}</a>
-                {% endfor %}
-                <p class="card-text postBy" id="postBy" name="postBy">posted by {{blog.author}}</p>
+                <h5 class="card-title subject" id="subject" name="subject">{{user.username}}</a></h5>
+                
                 <!-- used to comment something on one of the posts -->
                 {% comment %} <form action="" method="POST">
                   {% csrf_token %}

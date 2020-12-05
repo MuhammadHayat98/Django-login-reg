@@ -105,7 +105,20 @@ def followsWho(request):
 def onDate(request):
     # val = Blog.objects.filter(date_posted__date__year = '2020',date_posted__date__month = '12',date_posted__date__day = '04').count("author")
     context = {
-        'blogs' : Blog.objects.filter(date_posted__date__year = '2020',date_posted__date__month = '12',date_posted__date__day = '04')
+        'users' : User.objects.raw('''
+        Select id, author_id,slug,count(author_id),date_posted
+            from (
+            SELECT author_id,slug, COUNT(author_id),date_posted
+            FROM accounts_blog  GROUP BY author_id 
+            HAVING COUNT (author_id)=( 
+            SELECT MAX(mycount) 
+            FROM ( 
+            SELECT author_id,  COUNT(author_id) mycount 
+            FROM accounts_blog 
+            GROUP BY author_id) )
+
+        )where date_posted like '%2020-12-04%'
+        ''')
     }
     print(context)
     return render(request, 'accounts/onDate.html', context)
